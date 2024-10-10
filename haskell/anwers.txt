@@ -1,0 +1,126 @@
+1.
+  (+) :: Nat -> Nat -> Nat
+  n + O   = n
+  n + Sm = S(n + m)
+
+  (*) :: Nat -> Nat -> Nat
+  n * O  = O
+  n * Sm = n * m + n
+
+  (^) :: Nat -> Nat -> Nat
+  n ^ O  = SO
+  n ^ Sm = n ^ m * m
+
+2.
+  1. 2 + 3 ≡ S (S O) + S (S (S O))
+           = S (S (S O) + S (S O))
+           = S (S (S (S O) + S O))
+           = S (S (S (S (S (S O) + O))))
+           = S (S (S (S (S (S O)))))
+
+  2. 3 + 2 ≡ S (S (S O)) + S (S O)
+           = S (S (S (S O) + S O))
+           = S (S (S (S (S O) + O)))
+           = S (S (S (S (S O))))
+
+  3. 4 + 1 ≡ S (S (S (S O))) + S O
+           = S(S (S (S (S O))) + O)
+           = S(S (S (S (S O))))
+
+3.
+  double :: Nat -> Nat
+  double = (* S (S O))
+
+4.
+  1. double(double(S O)) ≡ double(S O * S (S O))
+                         = double(S O * S O + S O)
+                         = double((S O * O + S O) + S O)
+                         = double((O + S O) + S O)
+                         = double((S (O + O) + S O))
+                         = double(S O + S O)
+                         = double(S (S O + O))
+                         = double(S (S O))
+                         ≡ S (S O) * S (S O)
+                         = S (S O) * S O + S (S O)
+                         = (S (S O) * O + S (S O)) + S (S O)
+                         = (O + S( S O) + S (S O))
+                         = S (O + S O) + S (S O)
+                         = S (S (O + O)) + S (S O)
+                         = S (S O) + S (S O)
+                         = S (S (S O) + S O)
+                         = S (S (S (S O) + O))
+                         = S (S (S (S O)))
+
+  2. double(S O + S (S O)) = double(S (S O + S (S O)))
+                           = double(S (S (S O + S O)))
+                           = double(S (S (S (S O + O))))
+                           = double(S (S (S (S O))))
+                           ≡ S (S (S 0)) * S (S O)
+                           = S (S (S 0)) * S (S O)
+                           = S (S (S 0)) * S O + S (S (S O))
+                           = (S (S (S 0)) * O + S (S (S O))) + S (S (S O))
+                           = (O + S (S (S O))) + S (S (S O))
+                           = (O + S (S (S O))) + S (S (S O))
+                           = vou somas essa bagaça não, mas é 6
+
+5. (*)-idR (∀n)[n * S O = n]
+Indução no n    
+Base:
+  Calculamos O * S O
+           = O * O + O [(*)-2]
+           = O + O     [(*)-1]
+           = O         [(+)-1]
+Passo Indutivo:
+  Seja k t.q. k * S O = k
+  Calculamos S k * S O
+           = S k * O + S k [(*)-2]
+           = O + S k       [(*)-1]
+           = S k           [Finge que eu demonstrei O + n = n]
+
+6. (^)-idR (∀n)[n ^ S O = n]
+Indução no n
+Base:
+  Calculamos O ^ S O
+           = O ^ O * O [(^)-2]
+           = O * O     [(^)-1]
+           = O         [(*)-1]
+Passo Indutivo:
+  Seja k t.q. k ^ S O = k
+  Calculamos S k ^ S O
+           = S k ^ O * S k [(^)-2]
+           = S O * S k     [(^)-1]
+           = S k           [Finge que eu demonstrei (*)-idL]
+
+7.
+  pred :: Nat -> Nat
+  pred (S n) = n
+  pred O = O
+
+8.
+  1. fact: Nat -> Nat
+     fact (S n) = S n * fact n
+     fact O = S O
+
+  2. fib: Nat -> Nat
+     fib n = n
+     fib (S (S n)) = fib(S n) + fib n
+
+  3. min: Nat x Nat -> Nat
+     min O n = O
+     min n O = O
+     min (S n) + (S m) = S (min n m)
+
+  4. max: Nat x Nat -> Nat
+     max O n = n
+     max n O = n
+     max (S n) + (S m) = S (max n m)
+
+  6. quot: Nat x Nat -> Nat
+     quot n O = error("Dividiu por 0")
+     quot O n = O
+     quot 
+
+
+     quot(5,2) = 2
+               = S(quot 3 2)
+               = S( S(quot(1 2)))
