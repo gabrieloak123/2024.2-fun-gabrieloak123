@@ -115,12 +115,28 @@ Passo Indutivo:
      max n O = n
      max (S n) + (S m) = S (max n m)
 
+  -- Aux defs
+  (leq): Nat x Nat -> Bool
+  O leq n = True
+  n leq O = False
+  (S n) leq (S m) = leq n m
+
+  ifthenelse: Bool -> a -> a -> a
+  ifthenelse True  x y = x
+  ifthenelse False x y = y
+
   6. quot: Nat x Nat -> Nat
-     quot n O = error("Dividiu por 0")
-     quot O n = O
-     quot 
+     quot _ O = error("Dividiu por 0")
+     quot n m = ifthenelse (n leq m) O (S (quot (n-m m)))
 
+  7. rem: Nat x Nat -> Nat
+     rem _ O = error("Dividiu por 0")
+     rem n m = ifthenelse(n leq m) n (rem (n-m) m)
 
-     quot(5,2) = 2
-               = S(quot 3 2)
-               = S( S(quot(1 2)))
+  5. div: Nat x Nat -> Nat x Nat
+     div _ O = error("Dividiu por 0")
+     div n m = (quot n m) (rem n m)
+
+  8. gcd: Nat x Nat -> Nat
+
+  9. lcm: Nat x Nat -> Nat
