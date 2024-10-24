@@ -14,11 +14,26 @@ import Prelude hiding (
   rem,
   (*),
   (+),
+  (-),
   (^),
  )
 
 data Nat = O | S Nat
   deriving (Eq, Show)
+
+-- abbrevs (syntactic sugar)
+zero, one, two, three, four, five, six, seven, eight, nine, ten :: Nat
+zero = O
+one = S zero
+two = S one
+three = S two
+four = S three
+five = S four
+six = S five
+seven = S six
+eight = S seven
+nine = S eight
+ten = S nine
 
 (+) :: Nat -> Nat -> Nat
 n + O = n
@@ -44,28 +59,53 @@ fact (S n) = S n * fact n
 fact O = S O
 
 fib :: Nat -> Nat
-fib n = n
 fib (S (S n)) = fib (S n) + fib n
+fib n = n
 
-min :: Nat -> Nat -> Nat
-min O n = O
-min n O = O
-min (S n) (S m) = S (min n m)
+min :: (Nat, Nat) -> Nat
+min (O, _) = O
+min (_, O) = O
+min (S n, S m) = S (min (n, m))
 
-max :: Nat -> Nat -> Nat
-max O n = n
-max n O = n
-max (S n) (S m) = S (max n m)
+max :: (Nat, Nat) -> Nat
+max (O, n) = n
+max (n, O) = n
+max (S n, S m) = S (max (n, m))
 
-leq :: Nat -> Nat -> Bool
-leq O _ = True
-leq _ O = False
-leq (S n) (S m) = leq n m
+-- Auxiliar
+
+leq :: (Nat, Nat) -> Bool
+leq (O, _) = True
+leq (_, O) = False
+leq (S n, S m) = leq (n, m)
 
 ifthenelse :: Bool -> a -> a -> a
 ifthenelse True x _ = x
 ifthenelse False _ y = y
 
-quot :: Nat -> Nat -> Nat
-quot _ O = error "Dividiu por 0"
-quot n m = ifthenelse (leq n m) O (S (quot (n - m m)))
+(-) :: Nat -> Nat -> Nat
+O - _ = O
+n - O = n
+(S n) - (S m) = n - m
+
+quot :: (Nat, Nat) -> Nat
+quot (_, O) = error "Dividiu por 0"
+quot (n, m) = ifthenelse (leq (n, m)) O (S (quot (n - m, m)))
+
+rem :: (Nat, Nat) -> Nat
+rem (_, O) = error "Dividiu por 0"
+rem (n, m) = ifthenelse (leq (n, m)) n (rem (n - m, m))
+
+div :: (Nat, Nat) -> (Nat, Nat)
+div (_, O) = error "Dividiu por 0"
+div (n, m) = (quot (n, m), rem (n, m))
+
+gcd :: (Nat, Nat) -> Nat
+gcd (O, O) = error "Infinity"
+gcd (n, O) = n
+gcd (n, m) = gcd (max (n, m) - min (n, m), min (n, m))
+
+lcm :: (Nat, Nat) -> Nat
+lcm (_, O) = O
+lcm (O, _) = O
+lcm (n, m) = quot (n * m, gcd (n, m))
