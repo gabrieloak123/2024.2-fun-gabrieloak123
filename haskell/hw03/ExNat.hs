@@ -82,22 +82,26 @@ odd n = not (even n)
 
 -- addition
 (<+>) :: Nat -> Nat -> Nat
-(<+>) = undefined
+(<+>) n O = n
+(<+>) n (S m) = S ((<+>) n m)
 
 -- This is called the dotminus or monus operator
 -- (also: proper subtraction, arithmetic subtraction, ...).
 -- It behaves like subtraction, except that it returns 0
 -- when "normal" subtraction would return a negative number.
 (<->) :: Nat -> Nat -> Nat
-(<->) = undefined
+(<->) O _ = O
+(<->) n O = n
+(<->) (S n) (S m) = (<->) n m
 
 -- multiplication
 (<*>) :: Nat -> Nat -> Nat
-(<*>) = undefined
+(<*>) n O = O
+(<*>) n (S m) = (<+>) n ((<*>) n m)
 
 -- exponentiation
 (<^>) :: Nat -> Nat -> Nat
-(<^>) = undefined
+(<^>) n O = S O
 
 -- quotient
 (</>) :: Nat -> Nat -> Nat
