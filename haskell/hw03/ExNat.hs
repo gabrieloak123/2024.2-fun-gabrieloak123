@@ -3,20 +3,23 @@
 module ExNat where
 
 -- Do not alter this import!
-import Prelude
-    ( Show(..)
-    , Eq(..)
-    , Ord(..)
-    , Num(..)
-    , Integral(..)
-    , Bool(..) , not , (&&) , (||)
-    , (++)
-    , ($)
-    , (.)
-    , undefined
-    , error
-    , otherwise
-    )
+import Prelude (
+  Bool (..),
+  Eq (..),
+  Integral (..),
+  Num (..),
+  Ord (..),
+  Show (..),
+  error,
+  not,
+  otherwise,
+  undefined,
+  ($),
+  (&&),
+  (++),
+  (.),
+  (||),
+ )
 
 -- Define evenerything that is undefined,
 -- without using standard Haskell functions.
@@ -31,45 +34,47 @@ data Nat where
 ----------------------------------------------------------------
 
 instance Show Nat where
-
-    -- zero  should be shown as O
-    -- three should be shown as SSSO
-    show = undefined
+  -- zero  should be shown as O
+  -- three should be shown as SSSO
+  show O = "O"
+  show (S n) = "S" ++ show n
 
 instance Eq Nat where
-
-    (==) = undefined
+  (==) = undefined
 
 instance Ord Nat where
+  (<=) O _ = True
+  (<=) _ O = False
+  (<=) (S n) (S m) = (<=) n m
 
-    (<=) = undefined
+  -- Ord does not REQUIRE defining min and max.
+  -- Howevener, you should define them WITHOUT using (<=).
+  -- Both are binary functions: max m n = ..., etc.
 
-    -- Ord does not REQUIRE defining min and max.
-    -- Howevener, you should define them WITHOUT using (<=).
-    -- Both are binary functions: max m n = ..., etc.
+  min = undefined
 
-    min = undefined
-
-    max = undefined
-
+  max = undefined
 
 ----------------------------------------------------------------
 -- internalized predicates
 ----------------------------------------------------------------
 
 isZero :: Nat -> Bool
-isZero = undefined
+isZero O = True
+isZero _ = False
 
 -- pred is the predecessor but we define zero's to be zero
 pred :: Nat -> Nat
-pred = undefined
+pred (S n) = n
+pred O = O
 
 even :: Nat -> Bool
-even = undefined
+even O = True
+even (S O) = False
+even (S (S n)) = even n
 
 odd :: Nat -> Bool
-odd = undefined
-
+odd n = not (even n)
 
 ----------------------------------------------------------------
 -- operations
@@ -108,7 +113,6 @@ odd = undefined
 
 divides = (<|>)
 
-
 -- x `absDiff` y = |x - y|
 -- (Careful here: this - is the real minus operator!)
 absDiff :: Nat -> Nat -> Nat
@@ -117,7 +121,8 @@ absDiff = undefined
 (|-|) = absDiff
 
 factorial :: Nat -> Nat
-factorial = undefined
+factorial O = S O
+factorial (S n) = S n * factorial n
 
 -- signum of a number (-1, 0, or 1)
 sg :: Nat -> Nat
@@ -127,7 +132,6 @@ sg = undefined
 lo :: Nat -> Nat -> Nat
 lo = undefined
 
-
 ----------------------------------------------------------------
 -- Num & Integral fun
 ----------------------------------------------------------------
@@ -135,23 +139,20 @@ lo = undefined
 -- For the following functions we need Num(..).
 -- Do NOT use the following functions in the definitions above!
 
-toNat :: Integral a => a -> Nat
+toNat :: (Integral a) => a -> Nat
 toNat = undefined
 
-fromNat :: Integral a => Nat -> a
+fromNat :: (Integral a) => Nat -> a
 fromNat = undefined
-
 
 -- Voilá: we can now easily make Nat an instance of Num.
 instance Num Nat where
-
-    (+) = (<+>)
-    (*) = (<*>)
-    (-) = (<->)
-    abs n = n
-    signum = sg
-    fromInteger x
-      | x < 0     = undefined
-      | x == 0    = undefined
-      | otherwise = undefined
-
+  (+) = (<+>)
+  (*) = (<*>)
+  (-) = (<->)
+  abs n = n
+  signum = sg
+  fromInteger x
+    | x < 0 = undefined
+    | x == 0 = undefined
+    | otherwise = undefined
