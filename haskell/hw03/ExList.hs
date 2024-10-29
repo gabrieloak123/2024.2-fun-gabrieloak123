@@ -2,17 +2,34 @@
 
 module ExList where
 
-import Prelude
-    ( Char , String , Int , Integer , Double , Float , Bool(..)
-    , Num(..) , Integral(..) , Enum(..) , Ord(..) , Eq(..)
-    , not , (&&) , (||)
-    , (.) , ($)
-    , flip , curry , uncurry
-    , otherwise , error , undefined
-    )
-import qualified Prelude   as P
-import qualified Data.List as L
-import qualified Data.Char as C
+import Data.Char qualified as C
+import Data.List qualified as L
+import Prelude (
+  Bool (..),
+  Char,
+  Double,
+  Enum (..),
+  Eq (..),
+  Float,
+  Int,
+  Integer,
+  Integral (..),
+  Num (..),
+  Ord (..),
+  String,
+  curry,
+  error,
+  flip,
+  not,
+  otherwise,
+  uncurry,
+  undefined,
+  ($),
+  (&&),
+  (.),
+  (||),
+ )
+import Prelude qualified as P
 
 {- import qualified ... as ... ?
 
@@ -28,7 +45,6 @@ C.toUpper :: Char -> Char
 You MUST NOT use ANY of these in your code
 
 -}
-
 
 {- Our lists vs Haskell lists
 
@@ -58,28 +74,37 @@ write [u,v]     for our u `Cons` (v `Cons` Nil)
 -}
 
 head :: [a] -> a
-head = undefined
+head (x : xs) = x
+head _ = error "headless"
 
 tail :: [a] -> [a]
-tail = undefined
+tail (x : xs) = xs
+tail _ = []
 
 null :: [a] -> Bool
-null = undefined
+null [] = True
+null _ = False
 
-length :: Integral i => [a] -> i
-length = undefined
+length :: (Integral i) => [a] -> i
+length (x : xs) = 1 + length xs
+length _ = 0
 
-sum :: Num a => [a] -> a
-sum = undefined
+sum :: (Num a) => [a] -> a
+sum (x : xs) = x + sum xs
+sum _ = 0
 
-product :: Num a => [a] -> a
-product = undefined
+product :: (Num a) => [a] -> a
+product (x : xs) = x * product xs
+product _ = 1
 
 reverse :: [a] -> [a]
-reverse = undefined
+reverse (x : xs) = reverse xs ++ [x]
+reverse _ = []
 
 (++) :: [a] -> [a] -> [a]
-(++) = undefined
+[] ++ l = l
+l ++ [] = l
+(x : xs) ++ l = x : (xs ++ l)
 
 -- right-associative for performance!
 -- (what?!)
@@ -94,9 +119,9 @@ snoc = undefined
 
 -- different implementation of (++)
 (+++) :: [a] -> [a] -> [a]
-xs +++ []     = xs
-xs +++ [y]    = xs <: y
-xs +++ (y:ys) = (xs +++ [y]) +++ ys
+xs +++ [] = xs
+xs +++ [y] = xs <: y
+xs +++ (y : ys) = (xs +++ [y]) +++ ys
 
 -- left-associative for performance!
 -- (hmm??)
@@ -177,4 +202,3 @@ Examples of palindromes:
 "Doc, note I dissent.  A fast never prevents a fatness.  I diet on cod."
 
 -}
-
