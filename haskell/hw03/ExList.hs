@@ -112,7 +112,7 @@ infixr 5 ++
 
 -- (snoc is cons written backwards)
 snoc :: a -> [a] -> [a]
-snoc = undefined
+snoc x xs = xs ++ [x]
 
 (<:) :: [a] -> a -> [a]
 (<:) = flip snoc
@@ -127,42 +127,116 @@ xs +++ (y : ys) = (xs +++ [y]) +++ ys
 -- (hmm??)
 infixl 5 +++
 
--- minimum :: Ord a => [a] -> a
--- maximum :: Ord a => [a] -> a
+minimum :: (Ord a) => [a] -> a
+minimum [] = error "Lista vazia"
+minimum [x] = x
+minimum (x : xs) = min x (minimum xs)
 
--- take
--- drop
+maximum :: (Ord a) => [a] -> a
+maximum [] = error "Lista vazia"
+maximum [x] = x
+maximum (x : xs) = max x (maximum xs)
 
--- takeWhile
--- dropWhile
+take :: Int -> [a] -> [a]
+take _ [] = []
+take 0 l = []
+take n (x : xs) = x : take (n - 1) xs
 
--- tails
--- init
+drop :: Int -> [a] -> [a]
+drop _ [] = []
+drop 0 l = l
+drop n (x : xs) = drop (n - 1) xs
+
+-- pending use any
+takeWhile :: (a -> Bool) -> [a] -> [a]
+takeWhile _ [] = []
+takeWhile p (x : xs)
+  | p x = x : takeWhile p xs
+  | otherwise = takeWhile p xs
+
+dropWhile :: (a -> Bool) -> [a] -> [a]
+dropWhile _ [] = []
+dropWhile p (x : xs)
+  | p x = dropWhile p xs
+  | otherwise = x : dropWhile p xs
+
+init :: [a] -> [a]
+init [] = error "Lista vazia"
+init [x] = []
+init (x : xs) = x : init xs
+
 -- inits
+-- tails
 
 -- subsequences
 
--- any
--- all
+-- add typeclass
+any :: (a -> Bool) -> [a] -> Bool
+any p [] = False
+any p (x : xs)
+  | p x = True
+  | otherwise = any p xs
 
--- and
--- or
+all :: (a -> Bool) -> [a] -> Bool
+all p [] = True
+all p (x : xs)
+  | p x = all p xs
+  | otherwise = False
 
--- concat
+-- add typeclass
+and :: [Bool] -> Bool
+and [] = True
+and (b : bs)
+  | b = and bs
+  | otherwise = False
+
+or :: [Bool] -> Bool
+or [] = False
+or (b : bs)
+  | b = True
+  | otherwise = or bs
+
+-- concat :: [[a]] -> [a]
 
 -- elem using the funciton 'any' above
+elem :: (Eq a) => a -> [a] -> Bool
+elem n l = any (n ==) l
 
 -- elem': same as elem but elementary definition
 -- (without using other functions except (==))
+elem' :: (Eq a) => a -> [a] -> Bool
+elem' _ [] = False
+elem' n (x : xs)
+  | n == x = True
+  | otherwise = elem' n xs
 
--- (!!)
+(!!) :: [a] -> Int -> a
+(x : xs) !! 0 = x
+(x : xs) !! i
+  | (i <= 0) || i >= length (x : xs) = error "index inválido"
+  | otherwise = xs !! (i - 1)
 
--- filter
--- map
+filter :: (a -> Bool) -> [a] -> [a]
+filter _ [] = []
+filter p (x : xs)
+  | p x = x : filter p xs
+  | otherwise = filter p xs
 
--- cycle
--- repeat
--- replicate
+map :: (a -> b) -> [a] -> [b]
+map f [] = []
+map f (x : xs) = f x : map f xs
+
+cycle :: [a] -> [a]
+cycle [] = error "Lista vazia"
+cycle l = l ++ cycle l
+
+repeat :: a -> [a]
+repeat x = x : repeat x
+
+replicate :: Int -> a -> [a]
+replicate n x
+  | n <= 0 = []
+  | otherwise = x : replicate (n - 1) x
 
 -- isPrefixOf
 -- isInfixOf
