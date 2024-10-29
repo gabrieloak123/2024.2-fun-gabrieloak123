@@ -3,6 +3,8 @@
 module ExNat where
 
 -- Do not alter this import!
+
+import Data.Bits (Bits (xor))
 import Prelude (
   Bool (..),
   Eq (..),
@@ -40,12 +42,14 @@ instance Show Nat where
   show (S n) = "S" ++ show n
 
 instance Eq Nat where
-  (==) = undefined
+  O == O = True
+  (S n) == (S m) = n == m
+  _ == _ = False
 
 instance Ord Nat where
-  (<=) O _ = True
-  (<=) _ O = False
-  (<=) (S n) (S m) = (<=) n m
+  O <= _ = True
+  _ <= O = False
+  (S n) <= (S m) = n <= m
 
   -- Ord does not REQUIRE defining min and max.
   -- Howevener, you should define them WITHOUT using (<=).
@@ -82,45 +86,56 @@ odd n = not (even n)
 
 -- addition
 (<+>) :: Nat -> Nat -> Nat
-(<+>) n O = n
-(<+>) n (S m) = S ((<+>) n m)
+n <+> O = n
+n <+> (S m) = S (n <+> m)
 
 -- This is called the dotminus or monus operator
 -- (also: proper subtraction, arithmetic subtraction, ...).
 -- It behaves like subtraction, except that it returns 0
 -- when "normal" subtraction would return a negative number.
 (<->) :: Nat -> Nat -> Nat
-(<->) O _ = O
-(<->) n O = n
-(<->) (S n) (S m) = (<->) n m
+O <-> _ = O
+n <-> O = n
+(S n) <-> (S m) = n <-> m
 
 -- multiplication
 (<*>) :: Nat -> Nat -> Nat
-(<*>) n O = O
-(<*>) n (S m) = (<+>) n ((<*>) n m)
+n <*> O = O
+n <*> (S m) = n <+> (n <*> m)
 
 -- exponentiation
 (<^>) :: Nat -> Nat -> Nat
-(<^>) n O = S O
+n <^> O = S O
+n <^> (S m) = n <*> (n <^> m)
 
 -- quotient
 (</>) :: Nat -> Nat -> Nat
-(</>) = undefined
+n </> O = error "Dividiu por O"
+n </> m =
+  if n <= m
+    then O
+    else S ((n <-> m) </> m)
 
 -- remainder
 (<%>) :: Nat -> Nat -> Nat
-(<%>) = undefined
+n <%> O = error "Dividiu por O"
+n <%> m =
+  if n <= m
+    then n
+    else S ((n <-> m) <%> m)
 
 -- divides
 (<|>) :: Nat -> Nat -> Bool
-(<|>) = undefined
+n <|> m = n </> m == O
 
 divides = (<|>)
 
 -- x `absDiff` y = |x - y|
 -- (Careful here: this - is the real minus operator!)
 absDiff :: Nat -> Nat -> Nat
-absDiff = undefined
+absDiff n O = n
+absDiff O n = n
+absDiff (S n) (S m) = absDiff n m
 
 (|-|) = absDiff
 
@@ -130,11 +145,17 @@ factorial (S n) = S n * factorial n
 
 -- signum of a number (-1, 0, or 1)
 sg :: Nat -> Nat
-sg = undefined
+sg O = O
+sg _ = S O
 
 -- lo b a is the floor of the logarithm base b of a
 lo :: Nat -> Nat -> Nat
-lo = undefined
+lo _ O = error "Não existe"
+lo _ (S O) = O
+lo n m =
+  if n > m
+    then O
+    else S (lo n (m </> n))
 
 ----------------------------------------------------------------
 -- Num & Integral fun
@@ -144,10 +165,15 @@ lo = undefined
 -- Do NOT use the following functions in the definitions above!
 
 toNat :: (Integral a) => a -> Nat
-toNat = undefined
+toNat n
+  | n < 0 = error "Número negativo"
+  | n == 0 = O
+  | n > 0 = S (toNat (n - 1))
 
 fromNat :: (Integral a) => Nat -> a
-fromNat = undefined
+fromNat n
+  | n == O = 0
+  | S n > O = 1 + fromNat n
 
 -- Voilá: we can now easily make Nat an instance of Num.
 instance Num Nat where
@@ -156,7 +182,4 @@ instance Num Nat where
   (-) = (<->)
   abs n = n
   signum = sg
-  fromInteger x
-    | x < 0 = undefined
-    | x == 0 = undefined
-    | otherwise = undefined
+  fromInteger = toNat
