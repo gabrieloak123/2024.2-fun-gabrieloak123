@@ -14,18 +14,18 @@ catMaybes l =
         [] -> []
         (m : ms) ->
             case m of
-                Nothing -> catMaybes ms
-                Just e -> e : catMaybes ms
+                Just e  -> e : catMaybes ms
+                _       -> catMaybes ms
 
 fromJust :: Maybe a -> a
 fromJust m = case m of
-    Nothing -> error "Cannot convert"
-    Just e -> e
+    Just e  -> e
+    _       -> error "Cannot convert"
 
 fromMaybe :: a -> Maybe a -> a
 fromMaybe d m = case m of
     Just a -> a
-    _ -> d
+    _      -> d
 
 isJust :: Maybe a -> Bool
 isJust = not . isNothing
@@ -33,21 +33,36 @@ isJust = not . isNothing
 isNothing :: Maybe a -> Bool
 isNothing m = case m of
     Nothing -> True
-    _ -> False
+    _       -> False
+
 mapMaybe :: (a -> b) -> (Maybe a -> Maybe b)
-mapMaybe = undefined
+mapMaybe f m = case m of
+                 Just a  -> Just (f a)
+                 _       -> Nothing
 
 justMap :: (a -> Maybe b) -> [a] -> [b]
-justMap = undefined
+justMap _ [] =  []
+justMap f (a:as) = case (f a) of
+                     Just b  -> b:(justMap f as)
+                     _       -> justMap f as
 
 maybe :: b -> (a -> b) -> Maybe a -> b
-maybe = undefined
+maybe b f (Just x) = f x
+maybe b _ _ = d
 
 maybeToList :: Maybe a -> [a]
-maybeToList = undefined
+maybeToList m = case m of
+                  Just x  -> [x]
+                  _       -> []
 
 listToMaybe :: [a] -> Maybe a
-listToMaybe = undefined
+listToMaybe l = case l of
+                  []    -> Nothing
+                  (x:_) -> Just x
 
 tryToModifyWith :: [Maybe (a -> a)] -> [a] -> [a]
-tryToModifyWith = undefined
+tryToModifyWith [] _ = []
+tryToModifyWith _ [] = []
+tryToModifyWith (mf:mfs) (x:xs) = case mf of
+                                    Just f -> (f x):(tryToModifyWith mfs xs)
+                                    _      -> x:(tryToModifyWith mfs xs)
