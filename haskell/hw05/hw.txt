@@ -1,0 +1,41 @@
+1.Demonstre que: bnot é uma involução: bnot . bnot = id
+
+2.Complete as igualdades e demonstre:
+
+    take n xs ++ drop n xs  =
+    take m . drop n  =
+    take m . take n  =
+    drop m . drop n  =
+    map g . map f  =
+    sum . map double  =
+    sum . map sum  =
+    sum . sort  =
+    map f . reverse  =
+    concat . map concat  =
+    filter p . map f  =
+
+3.Quais das seguintes são válidas e quais não?
+
+    map f . take n  =?=  take n . map f
+    map f . reverse  =?=  reverse .map f
+    map f . sort  =?=  sort . map f
+    filter (p . g)  =?=  map ginvl . filter p . map g
+    reverse . concat  =?=  concat . reverse . map reverse
+    filter p . concat  =?=  concat . map (filter p)
+
+    (suponha aqui que a ginvl é um inverso esquerdo da g, ou seja: glinv . g = id
+
+4.Complete as igualdades e investigue:
+
+    length . reverse  = 
+    reverse . reverse  = 
+    (xs ++ ys) ++ zs  = 
+    map id  =  
+    map (f . g)  =  
+    length (xs ++ ys)  = 
+    sum (xs ++ ys)  = 
+    product (xs ++ ys)  = 
+    concat (xss ++ yss)  = 
+    filter p (xs ++ ys)  = 
+    map f (xs ++ ys)  = 
+

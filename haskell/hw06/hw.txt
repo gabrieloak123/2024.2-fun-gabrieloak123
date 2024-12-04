@@ -1,0 +1,13 @@
+1.Aproveite Records nos teus programas até agora e brinque com a sintaxe
+
+2.Dadas funções f : α → γ e g : β → δ mostra como definir ? : α × β → γ × δ (i) manualmente; (ii) aproveitando algo sobre um (×) que aparece aí (qual dos dois, e qual é o tal algo?)
+
+3.Dadas funções f : α → γ e g : β → δ mostra como definir ? : α + β ← γ + δ (i) manualmente; (ii) aproveitando algo sobre um (+) que aparece aí (qual dos dois, e qual é o tal algo?)
+
+4.Desenhe, adivinhe, e demonstre:
+        ⟨outl, outr⟩ = ?
+        ⟨f,g⟩ = ⟨k,h⟩ ⇒ ?
+        ⟨f∘h,g∘h⟩ = ?
+        (f×h)∘⟨g,k⟩ = ?
+        1A×1B=?1A​×1B​=?
+        (f×h)∘(g×k) = ?

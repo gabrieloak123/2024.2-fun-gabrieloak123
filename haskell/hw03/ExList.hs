@@ -79,7 +79,7 @@ head _ = error "headless"
 
 tail :: [a] -> [a]
 tail (x : xs) = xs
-tail _ = []
+tail _ = error "tailess"
 
 null :: [a] -> Bool
 null [] = True
@@ -165,6 +165,10 @@ init [] = error "Lista vazia"
 init [x] = []
 init (x : xs) = x : init xs
 
+inits :: [a] -> [[a]]
+inits [] = [[]]
+inits (x : xs) = []
+
 -- inits
 -- tails
 
@@ -196,7 +200,8 @@ or (b : bs)
   | b = True
   | otherwise = or bs
 
--- concat :: [[a]] -> [a]
+concat :: [[a]] -> [a]
+concat [] = []
 
 -- elem using the funciton 'any' above
 elem :: (Eq a) => a -> [a] -> Bool
@@ -238,21 +243,38 @@ replicate n x
   | n <= 0 = []
   | otherwise = x : replicate (n - 1) x
 
--- isPrefixOf
--- isInfixOf
--- isSuffixOf
+isPrefixOf :: String -> String -> Bool
+isPrefixOf [] _ = True
+isPrefixOf (p : ps) (c : cs)
+  | p == s = isPrefixOf ps ss
+  | otherwise = False
 
--- zip
--- zipWith
+isInfixOf :: String -> String -> Bool
+isInfixOf [] _ = True
+isInfixOf (i : is) (c : cs)
+
+isSuffixOf :: String -> String -> Bool
+isSuffixOf suf str = isPrefixOf (reverse suf) (reverse str)
+
+zip :: [a] -> [b] -> [(a, b)]
+zip _ [] = error "Right lazy"
+zip (a : as) (b : bs) = [(a, b)]
+zip _ _ = []
+
+-- zipWith :: (a -> b -> c) -> [a] -> [b] -> [c]
 
 -- intercalate
 -- nub
 
--- splitAt
+splitAt :: Int -> [a] -> ([a], [a])
+splitAt n l
+  | n <= 0 = ([], l)
+
 -- what is the problem with the following?:
 -- splitAt n xs  =  (take n xs, drop n xs)
 
--- break
+break :: (a -> Bool) -> [a] -> ([a], [a])
+break p l = (takeWhile p l, dropWhile p l)
 
 -- lines
 -- words
@@ -263,7 +285,9 @@ replicate n x
 
 -- checks if the letters of a phrase form a palindrome (see below for examples)
 palindrome :: String -> Bool
-palindrome = undefined
+palindrome [] = True
+palindrome [a] = True
+palindrome (c : cs)
 
 {-
 
