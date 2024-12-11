@@ -1,39 +1,49 @@
 module Origami where
 
-import Prelude hiding
-    ( foldl , foldl1 , foldr , foldr1
-    , sum , product
-    , length
-    , concat
-    , filter
-    , map
-    , any , all
-    , and , or
-    , takeWhile , dropWhile
-    )
+import Prelude hiding (
+    all,
+    and,
+    any,
+    concat,
+    dropWhile,
+    filter,
+    foldl,
+    foldl1,
+    foldr,
+    foldr1,
+    length,
+    map,
+    or,
+    product,
+    sum,
+    takeWhile,
+ )
 
-import qualified Prelude as P
+import Prelude qualified as P
 
 --
 -- define the following folds:
 --
 
 -- foldr (#) v [x1, x2, x3, x4] = (x1 # (x2 # (x3 # (x4 # v))))
-foldr :: undefined
-foldr = undefined
+foldr :: (a -> a -> a) -> a -> [a] -> a
+foldr o i l = case l of
+    [] -> i
+    (x : xs) -> x `o` (foldr o i xs)
 
 -- foldl (#) v [x1, x2, x3, x4] = ((((v # x1) # x2) # x3) # x4)
 foldl :: undefined
 foldl = undefined
 
 -- foldr1 (#) [x1, x2, x3, x4] = (x1 # (x2 # (x3 # x4)))
-foldr1 :: undefined
-foldr1 = undefined
+foldr1 :: (a -> a -> a) -> [a] -> a
+foldr1 o l = case l of
+    [x] -> x
+    (x : xs) -> x `o` (foldr1 o xs)
 
 -- foldl1 (#) [x1, x2, x3, x4]  = (((x1 # x2) # x3) # x4)
 foldl1 :: undefined
 foldl1 = undefined
-
 
 --
 -- define the following scans:
@@ -56,11 +66,11 @@ scanr = undefined
 -- Define all of the following functions as folds:
 --
 
-sum :: Num a => [a] -> a
-sum = undefined
+sum :: (Num a) => [a] -> a
+sum = foldr (+) 0
 
-product :: Num a => [a] -> a
-product = undefined
+product :: (Num a) => [a] -> a
+product = foldr (*) 1
 
 concat :: [[a]] -> [a]
 concat = undefined
@@ -77,13 +87,13 @@ and = undefined
 or :: [Bool] -> Bool
 or = undefined
 
-minimum :: Ord a => [a] -> a
+minimum :: (Ord a) => [a] -> a
 minimum = undefined
 
-maximum :: Ord a => [a] -> a
+maximum :: (Ord a) => [a] -> a
 maximum = undefined
 
-length :: Integral i => [a] -> i
+length :: (Integral i) => [a] -> i
 length = undefined
 
 filter :: (a -> Bool) -> [a] -> [a]
@@ -105,19 +115,22 @@ dropWhile = undefined
 -- e.g.:
 -- semo [1..10] = (30, Just 9)
 -- semo [2,4,6] = (12, Nothing)
-semo :: Integral i => [i] -> (i, Maybe i)
+semo :: (Integral i) => [i] -> (i, Maybe i)
 semo = undefined
 
 -- removes adjacent duplicates
 -- e.g.:
 -- remdups [1,2,2,3,3,3,1,1] = [1,2,3,1]
-remdups :: Eq a => [a] -> [a]
+remdups :: (Eq a) => [a] -> [a]
 remdups = undefined
 
 safeLast :: [a] -> Maybe a
-safeLast = undefined
+safeLast [] = Nothing
+safeLast (x : xs) = case xs of
+    [x] -> Just x
+    (x : xs) -> safeLast xs
 
 -- dec2int [1,9,9,2] = 1992
-dec2int :: Integral i => [i] -> i
-dec2int = undefined
-
+dec2int :: (Integral i) => [i] -> i
+dec2int [] = 0
+dec2int (x : xs) = x * 10 ^ length xs + dec2int xs
