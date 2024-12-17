@@ -15,6 +15,8 @@ import Prelude hiding (
     map,
     or,
     product,
+    scanl,
+    scanr,
     sum,
     takeWhile,
  )
@@ -32,8 +34,10 @@ foldr o i l = case l of
     (x : xs) -> x `o` (foldr o i xs)
 
 -- foldl (#) v [x1, x2, x3, x4] = ((((v # x1) # x2) # x3) # x4)
-foldl :: undefined
-foldl = undefined
+foldl :: (a -> a -> a) -> a -> [a] -> a
+foldl o i l = case l of
+    [] -> i
+    (x : xs) -> (foldl o i xs) `o` x
 
 -- foldr1 (#) [x1, x2, x3, x4] = (x1 # (x2 # (x3 # x4)))
 foldr1 :: (a -> a -> a) -> [a] -> a
@@ -42,8 +46,10 @@ foldr1 o l = case l of
     (x : xs) -> x `o` (foldr1 o xs)
 
 -- foldl1 (#) [x1, x2, x3, x4]  = (((x1 # x2) # x3) # x4)
-foldl1 :: undefined
-foldl1 = undefined
+foldl1 :: (a -> a -> a) -> [a] -> a
+foldl1 o l = case l of
+    [x] -> x
+    (x : xs) -> (foldl1 o xs) `o` x
 
 --
 -- define the following scans:
@@ -57,10 +63,12 @@ foldl1 = undefined
 --
 
 scanl :: (b -> a -> b) -> b -> [a] -> [b]
-scanl = undefined
+scanl o a l = case l of
+    [] -> []
+    (x : xs) -> a' : (scanl o a' xs) where a' = a `o` x
 
 scanr :: (a -> b -> b) -> b -> [a] -> [b]
-scanr = undefined
+scanr o i l = case l of {}
 
 --
 -- Define all of the following functions as folds:
@@ -73,34 +81,34 @@ product :: (Num a) => [a] -> a
 product = foldr (*) 1
 
 concat :: [[a]] -> [a]
-concat = undefined
+concat = foldr (++) []
 
 any :: (a -> Bool) -> [a] -> Bool
-any = undefined
+any p = or . map p
 
 all :: (a -> Bool) -> [a] -> Bool
-all = undefined
+all p = and . map p
 
 and :: [Bool] -> Bool
-and = undefined
+and = foldr (&&) True
 
 or :: [Bool] -> Bool
-or = undefined
+or = foldr (||) False
 
 minimum :: (Ord a) => [a] -> a
-minimum = undefined
+minimum = foldr1 min
 
 maximum :: (Ord a) => [a] -> a
-maximum = undefined
+maximum = foldr1 max
 
 length :: (Integral i) => [a] -> i
 length = undefined
 
 filter :: (a -> Bool) -> [a] -> [a]
-filter = undefined
+filter p = undefined
 
 map :: (a -> b) -> [a] -> [b]
-map = undefined
+map f = undefined
 
 reverse :: [a] -> [a]
 reverse = undefined
